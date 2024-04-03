@@ -60,13 +60,47 @@ namespace BulkyWeb.Controllers
             //}
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
+                _db.Categories.Update(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
 
             }
            
             return View();
+        }
+        public IActionResult Delete(int? id)
+        {
+            if(id==null || id == 0)
+            {
+                return NotFound();
+            }
+            Category categoryFromDB = _db.Categories.Find(id);
+            if(categoryFromDB == null)
+            {
+                return NotFound();
+            }
+            return View(categoryFromDB);
+        }
+        [HttpPost,ActionName("Delete")]
+        public IActionResult DeletePost(int? id)
+        {
+            //if(obj.Name == obj.DisplayOrder.ToString())
+            //{
+            //    ModelState.AddModelError("name", "Display order cannot be same");
+            //}
+            Category obj= _db.Categories.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            _db.Categories.Remove(obj);
+           
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+
+            
+           
+           
         }
     }
 }
